@@ -1,7 +1,17 @@
 // Wrap all code that interacts with the DOM in a call to jQuery to ensure that
 // the code isn't run until the browser has finished rendering all the elements
 // in the html.
+
+
+const localeSettings = {};
+dayjs.locale(localeSettings);
+
+
 $(function () {
+
+  // current hour using Day.js library
+  const currentHour = dayjs().format('H');
+
   // TODO: Add a listener for click events on the save button. This code should
   // use the id in the containing time-block as a key to save the user input in
   // local storage. HINT: What does `this` reference in the click listener
@@ -9,6 +19,19 @@ $(function () {
   // time-block containing the button that was clicked? How might the id be
   // useful when saving the description in local storage?
   //
+
+  // 
+  function hourlyColor() {
+    $('.time-block').each(function() {
+      const blockHour = parseInt(this.id);
+      $(this).toggleClass('past', blockHour < currentHour);
+      $(this).toggleClass('present', blockHour == currentHour);
+      $(this).toggleClass('future', blockHour > currentHour);
+    });
+  }
+
+  hourlyColor();
+
   // TODO: Add code to apply the past, present, or future class to each time
   // block by comparing the id to the current hour. HINTS: How can the id
   // attribute of each time-block be used to conditionally add or remove the
@@ -19,5 +42,27 @@ $(function () {
   // the values of the corresponding textarea elements. HINT: How can the id
   // attribute of each time-block be used to do this?
   //
+
+  function textEntry() {
+    $('.saveBtn').on('click', function(){
+      const key = $(this).parent().attr('id');
+      const value = $(this).siblings('.description').val();
+      localStorage.setItem(key, value);
+    });
+  }
+
+  textEntry();
   // TODO: Add code to display the current date in the header of the page.
+
+  // displays current date and time
+  function updateTime() {
+    const dateElement = $('#date');
+    const timeElement = $('#time');
+    const currentDate = dayjs().format('ddd, MMMM D, YYYY');
+    const currentTime = dayjs().format('hh:mm:ss A');
+    dateElement.text(currentDate);
+    timeElement.text(currentTime);
+  }
+
+  setInterval(updateTime, 1000);
 });
