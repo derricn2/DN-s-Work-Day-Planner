@@ -20,12 +20,12 @@ $(function () {
   // useful when saving the description in local storage?
   //
 
-  // 
+  // changes the color of each time block according to the appropriate time of day relative to current hour
   function hourlyColor() {
     $('.time-block').each(function() {
       const blockHour = parseInt(this.id);
       $(this).toggleClass('past', blockHour < currentHour);
-      $(this).toggleClass('present', blockHour == currentHour);
+      $(this).toggleClass('present', blockHour === currentHour);
       $(this).toggleClass('future', blockHour > currentHour);
     });
   }
@@ -44,7 +44,7 @@ $(function () {
   //
 
   function textEntry() {
-    $('.saveBtn').on('click', function(){
+    $('.saveBtn').on('click', function() {
       const key = $(this).parent().attr('id');
       const value = $(this).siblings('.description').val();
       localStorage.setItem(key, value);
@@ -52,7 +52,13 @@ $(function () {
   }
 
   textEntry();
-  // TODO: Add code to display the current date in the header of the page.
+
+  // allows for texts to remain after user inputs data and refreshes page
+  $('.time-block').each(function() {
+    const key = $(this).attr('id');
+    const value = localStorage.getItem(key);
+    $(this).children('.description').val(value);
+  });
 
   // displays current date and time
   function updateTime() {
